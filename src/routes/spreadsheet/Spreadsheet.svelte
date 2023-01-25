@@ -1,6 +1,6 @@
 <script lang="ts">
 import Cell from './Cell.svelte';
-let editing=false;
+
 </script>
 
 
