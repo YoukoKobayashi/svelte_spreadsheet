@@ -1,6 +1,7 @@
 <script lang="ts">
   export let onChange = (updatedContent:string|number) => {};
 
+  let content:string|number;
   let editing=false;
 
   const onKeyDown = (event:KeyboardEvent) =>{
@@ -13,16 +14,27 @@
     }
   };
 
+  const evaluateFormula=(exp:string) =>{
+    const sanitized = exp.slice(1).replace(/[^\=\+\-\*%/0-9]/g,'');
+    return eval(sanitized);
+  };
 </script>
 
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <td on:click ={()=>editing=!editing}>
         {#if editing}
-          <input 
+          <input
             value={content} 
-            on:click|stopPropagation ={()=>null}
-            on:Keydown ={onKeyDown}
+            on:click|stopPropagation={() => null}
+            on:keydown ={onKeyDown}
             >
-    <!--    {:else}
-          {content} -->
+        {:else}
+          {#if content.toString().startsWith('=')}
+            {evaluateFormula(content.toString())}
+          {:else}
+            {content} 
+          {/if}
         {/if}
       </td>
+
+
