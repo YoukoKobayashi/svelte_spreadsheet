@@ -1,19 +1,20 @@
 <script lang="ts">
-  export let content:String|number = '';
+  export let onChange = (updatedContent:string|number) => {};
+
   let editing=false;
 
-  const onKeyDown = (event:any) =>{
+  const onKeyDown = (event:KeyboardEvent) =>{
     if(['Enter','Escape'].includes(event.key)){
       editing = false;
       if (event.key === 'Enter'){
-        content = event.target.value;
+        content = (event.target as HTMLInputElement).value;
+        onChange(content);
       }
     }
   };
 
 </script>
 
-<!--<td>{content}</td>-->
       <td on:click ={()=>editing=!editing}>
         {#if editing}
           <input 
@@ -21,7 +22,7 @@
             on:click|stopPropagation ={()=>null}
             on:Keydown ={onKeyDown}
             >
-        {:else}
-          {content}
+    <!--    {:else}
+          {content} -->
         {/if}
       </td>
