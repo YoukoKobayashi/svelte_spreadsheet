@@ -1,7 +1,8 @@
 <script lang="ts">
   export let onChange = (updatedContent:string|number) => {};
 
-  let content:string|number;
+  let content:any;
+
   let editing=false;
 
   const onKeyDown = (event:KeyboardEvent) =>{
