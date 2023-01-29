@@ -1,7 +1,7 @@
 <script lang="ts">
-  export let onChange = (updatedContent:string|number) => {};
+  export let onChange: (updatedContent:string|number) => void;  //型定義のみで初期値を入れないほうがよいのではないか？とのことでこの形。voidは返り値の型を定義した部分。
 
-  let content:any;
+  export let content:string|number;
 
   let editing=false;
 
