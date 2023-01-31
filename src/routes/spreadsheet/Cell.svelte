@@ -1,7 +1,7 @@
 <script lang="ts">
   export let onChange: (updatedContent:string|number) => void;  //型定義のみで初期値を入れないほうがよいのではないか？とのことでこの形。voidは返り値の型を定義した部分。
 
-  export let content:string|number;
+  export let content:string|number; //svelteでは、exportは複数可能
 
   let editing=false;
 

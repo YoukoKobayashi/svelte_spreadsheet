@@ -1,12 +1,29 @@
 <script lang="ts">
 import Cell from './Cell.svelte';
-
+import {onMount} from 'svelte'
 
 let cellContents:(string|number)[][] = [
   [1,2,3],
   [4,5,6],
   [7,8,9],
 ];
+
+// 考え方
+// const data = JSON.stringify(cellContents);  //JSON文字列に変換（=シリアライズする）
+// console.log(data);
+// localStorage.setItem('cellContents',data);  //シリアライズしたJSON文字列'data'を'cellContents'に保存する
+
+const persist = () =>{
+  const data = JSON.stringify(cellContents);
+  window.localStorage.setItem('cells',data);
+}
+
+onMount(()=>{
+  const persistedData = window.localStorage.getItem('cells');
+  if (persistedData){     //'cells'が既に保存されていた場合のみ
+    cellContents = JSON.parse(persistedData);   //JSNO文字列をperseしてオブジェクトに変換し、'cellContents'に代入する
+  }
+});
 
 </script>
 
@@ -36,6 +53,8 @@ let cellContents:(string|number)[][] = [
 <br>
 <button on:click={()=> cellContents=cellContents.map(row => [...row, 0])}>+ column</button>
 <button on:click={()=> cellContents=cellContents.map(row => row.slice(0,-1))}>- column</button>
+<br>
+<button on:click={persist}>Save</button>
 
 
 
