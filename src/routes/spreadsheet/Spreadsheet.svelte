@@ -1,6 +1,7 @@
 <script lang="ts">
 import Cell from './Cell.svelte';
 import {onMount} from 'svelte'
+	import { json } from '@sveltejs/kit';
 
 let cellContents:(string|number)[][] = [
   [1,2,3],
@@ -14,16 +15,31 @@ let cellContents:(string|number)[][] = [
 // localStorage.setItem('cellContents',data);  //シリアライズしたJSON文字列'data'を'cellContents'に保存する
 
 const persist = () =>{
-  const data = JSON.stringify(cellContents);
-  window.localStorage.setItem('cells',data);
-}
+  fetch('/api/cells',{
+    method: 'POST',
+    headers: {'Content-type': 'application/json'},
+    body: JSON.stringify({cells: cellContents})
+  });
+};
+
+//   const data = JSON.stringify(cellContents);
+//   window.localStorage.setItem('cells',data);
+// }
 
 onMount(()=>{
-  const persistedData = window.localStorage.getItem('cells');
-  if (persistedData){     //'cells'が既に保存されていた場合のみ
-    cellContents = JSON.parse(persistedData);   //JSNO文字列をperseしてオブジェクトに変換し、'cellContents'に代入する
-  }
+  fetch('/api/cells').then(res => res.text().then(s =>{
+    const data = JSON.parse(s);
+    if (data.cells){
+      cellContents = data.cells;
+    }
+  }))
 });
+
+//   const persistedData = window.localStorage.getItem('cells');
+//   if (persistedData){                           //'cells'が既に保存されていた場合のみ
+//     cellContents = JSON.parse(persistedData);   //JSNO文字列をperseしてオブジェクトに変換し、'cellContents'に代入する（ステートに設定する）
+//   }
+// });
 
 </script>
 
@@ -39,7 +55,9 @@ onMount(()=>{
     <tr>
       <th>{i+1}</th>
       {#each row as cell, j }
+        <td>
         <Cell content={cell} onChange={(updated) => cellContents[i][j] = updated} />
+        </td>
       {/each}
     </tr>
   {/each}
